@@ -27,7 +27,7 @@
     "@mui/icons-material": "^7.2.0",
     "redux": "^5.0.1",
     "react-router-dom": "^5.2.0",
-    "moment": "^2.25.3",
+    "moment": "^2.31.0",
     "redux-api-middleware": "^3.2.1",
     "lodash": "^4.17.21"
   },
@@ -44,7 +44,7 @@
     "@vitejs/plugin-react": "^5.0.0",
     "jest": "^30.3.0",
     "lodash-uuid": "^0.0.3",
-    "moment": "^2.25.3",
+    "moment": "^2.31.0",
     "prettier": "^2.3.2",
     "prop-types": "^15.7.2",
     "react-autosuggest": "^10.0.2",

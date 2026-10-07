@@ -1,0 +1,161 @@
+import {
+  parseData, dispatchMutationReq, dispatchMutationResp, dispatchMutationErr,
+  pageInfo, formatServerError, formatGraphQLError
+} from '@openimis/fe-core';
+
+function reducer(
+  state = {
+    mutation: {},
+    submittingMutation: false,
+    submittingAttachment: false,
+    fetchingNotices: false,
+    errorNotices: null,
+    fetchedNotices: false,
+    notices: [],
+    noticesPageInfo: { totalCount: 0 },
+    fetchingNotice: false,
+    errorNotice: null,
+    fetchedNotice: false,
+    notice: null,
+    errorMutation: null,
+    fetchingNoticeAttachments: false,
+    fetchedNoticeAttachments: false,
+    noticeAttachments: [],
+    errorNoticeAttachments: null,
+  },
+  action,
+) {
+  switch (action.type) {
+    case "FETCH_NOTICES_REQ":
+      return {
+        ...state,
+        fetchingNotices: true,
+        fetchedNotices: false,
+        notices: [],
+        noticesPageInfo: { totalCount: 0 },
+        errorNotices: null,
+      };
+    case "FETCH_NOTICES_RESP": {
+      const notices = parseData(action.payload.data.notices);
+      return {
+        ...state,
+        fetchingNotices: false,
+        fetchedNotices: true,
+        notices: notices,
+        noticesPageInfo: pageInfo(action.payload.data.notices),
+        errorNotices: formatGraphQLError(action.payload),
+      };
+    }
+    case "FETCH_NOTICES_ERR":
+      return {
+        ...state,
+        fetchingNotices: false,
+        errorNotices: formatServerError(action.payload),
+      };
+
+    case "GET_NOTICE_REQ":
+      return {
+        ...state,
+        fetchingNotice: true,
+        fetchedNotice: false,
+        errorNotice: null,
+      };
+    case "GET_NOTICE_RESP": {
+      const notices = parseData(action.payload.data.notices);
+      const fetchedNotice = notices && notices.length > 0 ? notices[0] : null;
+      return {
+        ...state,
+        fetchingNotice: false,
+        fetchedNotice: true,
+        notice: fetchedNotice,
+        notices: state.notices.map(notice =>
+          fetchedNotice?.uuid && notice?.uuid && notice.uuid.toString() === fetchedNotice.uuid.toString()
+            ? fetchedNotice
+            : notice
+        ),
+        errorNotice: formatGraphQLError(action.payload),
+      };
+    }
+    case "GET_NOTICE_ERR":
+      return {
+        ...state,
+        fetchingNotice: false,
+        errorNotice: formatServerError(action.payload),
+      };
+
+    case "NOTICE_TOGGLE_STATUS_REQ":
+      return {
+        ...state,
+        fetchingNotices: false,
+      };
+    case "NOTICE_TOGGLE_STATUS_RESP":
+      return {
+        ...state,
+        notices: state.notices.map(notice =>
+          notice.uuid === action.meta.uuid
+            ? { ...notice, isActive: action.meta.isActive }
+            : notice
+        ),
+        notice: state.notice && state.notice.uuid === action.meta.uuid
+          ? { ...state.notice, isActive: action.meta.isActive }
+          : state.notice,
+      };
+    case "NOTICE_TOGGLE_STATUS_ERR":
+      return {
+        ...state,
+      };
+
+    case 'NOTICE_MUTATION_REQ':
+      return dispatchMutationReq(state, action);
+    case 'NOTICE_MUTATION_RESP':
+      return dispatchMutationResp(state, "createNotice", action);
+    case 'NOTICE_UPDATE_RESP':
+      return dispatchMutationResp(state, "updateNotice", action);
+    case 'NOTICE_DELETE_RESP':
+      return dispatchMutationResp(state, "deleteNotice", action);
+    case 'NOTICE_MUTATION_ERR':
+      return dispatchMutationErr(state, action);
+    case 'CREATE_NOTICE_ATTACHMENT_RESP':
+    case 'UPDATE_NOTICE_ATTACHMENT_RESP':
+    case 'DELETE_NOTICE_ATTACHMENT_RESP':
+      return {
+        ...state,
+        submittingAttachment: false,
+        mutation: action.meta,
+        errorMutation: formatGraphQLError(action.payload),
+      };
+
+    case 'NOTICE_ATTACHMENT_REQ':
+      return { ...state, submittingAttachment: true };
+    case 'NOTICE_ATTACHMENT_ERR':
+      return { ...state, submittingAttachment: false };
+
+    case 'NOTICE_ATTACHMENTS_REQ':
+      return {
+        ...state,
+        fetchingNoticeAttachments: true,
+        fetchedNoticeAttachments: false,
+        noticeAttachments: [],
+        errorNoticeAttachments: null,
+      };
+    case 'NOTICE_ATTACHMENTS_RESP':
+      return {
+        ...state,
+        fetchingNoticeAttachments: false,
+        fetchedNoticeAttachments: true,
+        noticeAttachments: parseData(action.payload.data.noticeAttachments),
+        errorNoticeAttachments: formatGraphQLError(action.payload),
+      };
+    case 'NOTICE_ATTACHMENTS_ERR':
+      return {
+        ...state,
+        fetchingNoticeAttachments: false,
+        fetchedNoticeAttachments: false,
+        errorNoticeAttachments: formatServerError(action.payload),
+      };
+    default:
+      return state;
+  }
+}
+
+export default reducer;

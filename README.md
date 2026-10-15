@@ -17,19 +17,32 @@ Available reading controls include text size, text color, line spacing, high con
 
 The existing message list, dates, priority indicators, pagination, edit actions, and attachment preview remain in place. Users with the create permission can access the add-message action.
 
+## Display on the home page
+
+```jsx
+// To display Home Messages on your home page:
+// import { PublishedComponent } from "@openimis/fe-core";
+//
+// Render inside the home page:
+// <PublishedComponent pubRef="notice.allNotices" />
+//
+// HomeMessagesModule must be enabled in the frontend assembly.
+// Keep "notice.allNotices" as the reference name for compatibility.
+```
+
 ## Assembly integration
 
-For the existing local checkout, add this entry to the frontend assembly's module manifest:
+For a local checkout named `HomeMessagesModule`, add this entry to the frontend assembly's module manifest:
 
 ```json
 {
   "name": "HomeMessagesModule",
-  "logicalName": "fe-notice",
-  "npm": "@openimis/fe-home-messages@file:../frontend-packages/NoticeModule"
+  "logicalName": "fe-home-messages",
+  "npm": "@openimis/fe-home-messages@file:../frontend-packages/HomeMessagesModule"
 }
 ```
 
-Adjust the `file:` path to match your checkout. The local folder can retain the name `NoticeModule`; the package name is defined in `package.json`.
+Adjust the `file:` path to match your checkout. If your local folder is still named `NoticeModule`, use `file:../frontend-packages/NoticeModule` instead. The package name is defined in `package.json`.
 
 Regenerate the assembly module registry and Vite aliases using its configuration generator, then refresh the assembly's local dependency links. Do not hand-edit generated `src/modules.jsx`.
 
@@ -82,7 +95,7 @@ Published references:
 | `notice.AttachmentDialog` | Attachment dialog component |
 | `notice.Carousel` | Attachment carousel component |
 
-Module configuration is merged with the default contributions by `HomeMessagesModule(cfg)`. The assembly entry above retains `logicalName: "fe-notice"` for existing configuration.
+Module configuration is merged with the default contributions by `HomeMessagesModule(cfg)`. The assembly entry above uses `logicalName: "fe-home-messages"`. If your assembly has existing configuration under `fe-notice`, move it to `fe-home-messages` or retain `logicalName: "fe-notice"` to continue using it.
 
 ## Compatibility with the former Notice module
 

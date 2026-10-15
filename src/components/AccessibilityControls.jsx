@@ -16,6 +16,7 @@ import { alpha } from "@mui/material/styles";
 const styles = (theme) => ({
   accessibilityControls: {
     display: "flex",
+    flexWrap: "wrap",
     alignItems: "center",
     gap: theme.spacing(1), // Reduced from 2 to 1
     padding: "4px 8px", // More compact padding

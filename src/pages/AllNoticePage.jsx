@@ -15,6 +15,8 @@ import {
 import { fetchNotices, toggleNoticeStatus, fetchNoticeAttachments } from "../actions";
 import { RIGHT_NOTICE_ADD } from "../constants";
 import {
+  Button,
+  Collapse,
   List,
   ListItem,
   Divider,
@@ -26,6 +28,10 @@ import {
   DialogTitle,
   DialogContent,
 } from "@mui/material";
+import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import AccessibilityNewIcon from "@mui/icons-material/AccessibilityNew";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import SlideshowIcon from "@mui/icons-material/Slideshow";
@@ -42,22 +48,27 @@ const styles = (theme) => ({
     background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
     minHeight: "100vh",
   },
-  header: {
+  accessibilityToolbar: {
     display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: theme.spacing(4),
-    padding: theme.spacing(3),
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
-    backdropFilter: "blur(10px)",
-    borderRadius: theme.spacing(2),
-    boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.07)",
-    border: "1px solid rgba(255, 255, 255, 0.18)",
+    flexDirection: "column",
+    alignItems: "flex-end",
+    gap: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+    "& .MuiCollapse-root": { maxWidth: "100%" },
   },
-  title: {
-    fontWeight: 700,
-    color: theme.palette.primary.main,
-    letterSpacing: "-0.02em",
+  toolbarRow: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+    gap: theme.spacing(1),
+    width: "100%",
+  },
+  messagesLabel: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1),
+    fontWeight: 600,
   },
   list: {
     width: "100%",
@@ -107,6 +118,7 @@ const styles = (theme) => ({
 
 class AllNotices extends Component {
   state = {
+    accessibilityOpen: false,
     currentPage: 1,
     carouselOpen: false,
     selectedNotice: null,
@@ -262,10 +274,26 @@ class AllNotices extends Component {
     return (
       <div className={classes.page}>
         <Magnifier active={magnifierActive} />
-        <div className={classes.header}>
-          <Typography variant="h4" className={classes.title}>
-            {formatMessageWithValues(intl, "notice", "allNoticesTitle")}
-          </Typography>
+        <div className={classes.accessibilityToolbar}>
+          <div className={classes.toolbarRow}>
+            <Typography component="h1" variant="subtitle1" className={classes.messagesLabel}>
+              <MessageOutlinedIcon color="primary" />
+              {intl.formatMessage({ id: "notice.messages.label" })}
+            </Typography>
+            <Button
+              size="small"
+              variant="outlined"
+              color="primary"
+              startIcon={<AccessibilityNewIcon />}
+              endIcon={this.state.accessibilityOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              aria-expanded={this.state.accessibilityOpen}
+              aria-controls="notice-accessibility-controls"
+              onClick={() => this.setState(({ accessibilityOpen }) => ({ accessibilityOpen: !accessibilityOpen }))}
+            >
+              {intl.formatMessage({ id: "notice.accessibility.toggle" })}
+            </Button>
+          </div>
+          <Collapse in={this.state.accessibilityOpen} id="notice-accessibility-controls">
           <AccessibilityControls
             textSize={textSize}
             textColor={textColor}
@@ -280,6 +308,7 @@ class AllNotices extends Component {
             onToggleDyslexicFont={this.toggleDyslexicFont}
             onToggleMagnifier={this.toggleMagnifier}
           />
+          </Collapse>
         </div>
         <List className={classes.list}>
           {notices.map((notice, index) => (

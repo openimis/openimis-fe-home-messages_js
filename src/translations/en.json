@@ -81,5 +81,7 @@
   "notice.NoticeFilter.showHistory": "Show historical values",
   "notice.showHistory": "Show historical values",
   "notice.validity_from": "Validity From",
-  "notice.validity_to": "Validity To"
+  "notice.validity_to": "Validity To",
+  "notice.accessibility.toggle": "Accessibility",
+  "notice.messages.label": "Messages"
 }

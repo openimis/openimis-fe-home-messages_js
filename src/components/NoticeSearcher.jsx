@@ -56,7 +56,7 @@ class NoticeSearcher extends Component {
 
   deleteNotice = (notice) => {
     const { intl, coreConfirm } = this.props;
-    const title = formatMessage(intl, "notice", "deleteNotice.confirm.title") || "Delete Notice";
+    const title = formatMessage(intl, "notice", "deleteNotice.confirm.title") || "Delete Home Message";
     const message = formatMessageWithValues(intl, "notice", "deleteNotice.confirm.message", {
       title: notice.title,
     }) || `Are you sure you want to delete notice "${notice.title}"?`;

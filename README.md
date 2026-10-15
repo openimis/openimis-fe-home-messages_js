@@ -1,6 +1,31 @@
-# openIMIS Frontend Notice Reference Module
+# openIMIS Frontend Home Messages Module
 
-This repository holds the files of the openIMIS Frontend Notice reference module. It is designed to be deployed as a module of `openimis-fe_js`.
+## Home Messages package rename
+
+The frontend package is `@openimis/fe-home-messages` and exports
+`HomeMessagesModule`. `NoticeModule` remains an alias for older assemblies.
+The backend distribution is `openimis-be-home-messages`; the Python package
+and Django app label remain `notice`. Register `notice` in the backend
+assembly, and `HomeMessagesModule` in the frontend assembly.
+
+Existing GraphQL operations, database tables, migration history, permissions,
+URLs, Redux keys, translation keys and extension points retain their `notice`
+identifiers. Existing frontend configuration uses `logicalName: "fe-notice"`.
+This package rename requires no database migration or data reset.
+
+Local checkout folders and GitHub repository URLs retain their current names.
+Publish/push the renamed package metadata before using a remote assembly install;
+changing the local metadata does not rename or publish a GitHub/PyPI/npm package.
+Do not install the old and new backend distributions together: both own `notice`.
+For this Docker development checkout, refresh editable package metadata with:
+
+```sh
+pip uninstall -y openimis-be-notice
+pip install --no-deps -e /app/modules/openimis-be-notice_py
+```
+
+
+This repository holds the files of the openIMIS Frontend Home Messages module. It is designed to be deployed as a module of `openimis-fe_js`.
 
 ## Main Menu Contributions
 - **Notices** (`notice.mainMenu` translation key)

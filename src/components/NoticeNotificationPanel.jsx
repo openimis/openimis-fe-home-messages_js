@@ -45,7 +45,7 @@ class NoticeNotificationPanel extends FormPanel {
         const {
             classes,
             edited,
-            title = "Notice Notifications",
+            title = "Home Message Notifications",
             titleParams = { label: "" },
             readOnly = true,
             intl,

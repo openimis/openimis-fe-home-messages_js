@@ -61,6 +61,9 @@ const DEFAULT_CONFIG = {
   ],
 };
 
-export const NoticeModule = (cfg) => {
+export const HomeMessagesModule = (cfg) => {
   return { ...DEFAULT_CONFIG, ...cfg };
 };
+
+// Compatibility for assemblies using the previous module export.
+export const NoticeModule = HomeMessagesModule;

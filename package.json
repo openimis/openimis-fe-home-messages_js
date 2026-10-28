@@ -1,9 +1,9 @@
 {
-  "name": "@openimis/fe-home-messages",
+  "name": "@openimis/fe-notice",
   "version": "1.1.0",
   "license": "AGPL-3.0-only",
-  "description": "openIMIS Frontend Home Messages reference module",
-  "repository": "openimis/openimis-fe-home-messages_js",
+  "description": "openIMIS Frontend Notice reference module",
+  "repository": "openimis/openimis-fe-notice_js",
   "main": "dist/index.cjs.js",
   "module": "dist/index.es.js",
   "engines": {
